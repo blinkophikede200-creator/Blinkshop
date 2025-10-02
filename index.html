@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔒 Premium CardZone | Secure Marketplace</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%);
+            color: #ffffff;
+            min-height: 100vh;
+        }
+        .navbar {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #ff4444;
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #ff4444;
+        }
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            margin-left: 2rem;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover {
+            color: #ff4444;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            background: rgba(255, 68, 68, 0.1);
+            border-radius: 15px;
+            margin-bottom: 3rem;
+        }
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ff4444, #ffaa44);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 68, 68, 0.3);
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: #ff4444;
+        }
+        .card h3 {
+            color: #ff4444;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+        .price {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #44ff44;
+            margin: 1rem 0;
+        }
+        .buy-btn {
+            background: linear-gradient(45deg, #ff4444, #ff8844);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: transform 0.2s;
+            width: 100%;
+        }
+        .buy-btn:hover {
+            transform: scale(1.05);
+        }
+        .login-container {
+            max-width: 400px;
+            margin: 5rem auto;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 3rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 68, 68, 0.3);
+        }
+        .login-container h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #ff4444;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #cccccc;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+        .admin-panel {
+            background: rgba(255, 68, 68, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+        }
+        .admin-panel h3 {
+            color: #ff4444;
+            margin-bottom: 1rem;
+        }
+        .add-card-form input {
+            margin: 0.5rem;
+            padding: 10px;
+            border: 1px solid #333;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">🔒 CardZone</div>
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#shop">Shop</a>
+            <a href="#login" onclick="showLogin()">Login</a>
+            <a href="#register" onclick="showRegister()">Register</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="hero" id="home">
+            <h1>PREMIUM CARDZONE</h1>
+            <p>Secure • Anonymous • Premium Quality Cards</p>
+        </div>
+
+        <div id="shop">
+            <h2>Available Cards</h2>
+            <div class="card-grid" id="cardContainer">
+                <!-- Cards will load here -->
+            </div>
+        </div>
+
+        <div id="adminPanel" class="admin-panel" style="display: none;">
+            <h3>🔧 Owner Admin Panel</h3>
+            <div class="add-card-form">
+                <input type="text" id="cardNumber" placeholder="Card Number">
+                <input type="text" id="cardExpiry" placeholder="MM/YY">
+                <input type="text" id="cardCVV" placeholder="CVV">
+                <input type="text" id="cardName" placeholder="Cardholder Name">
+                <input type="number" id="cardPrice" placeholder="Price ($)">
+                <button class="buy-btn" onclick="addNewCard()">Add Card to Shop</button>
+            </div>
+            <div id="cardList"></div>
+        </div>
+
+        <div id="loginForm" class="login-container" style="display: none;">
+            <h2>Login to CardZone</h2>
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="loginUsername" placeholder="Enter username">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="loginPassword" placeholder="Enter password">
+            </div>
+            <button class="buy-btn" onclick="loginUser()">Login</button>
+            <p style="text-align: center; margin-top: 1rem;">
+                Don't have account? <a href="#" onclick="showRegister()" style="color: #ff4444;">Register here</a>
+            </p>
+        </div>
+
+        <div id="registerForm" class="login-container" style="display: none;">
+            <h2>Join CardZone</h2>
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="regUsername" placeholder="Choose username">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="regPassword" placeholder="Create password">
+            </div>
+            <div class="form-group">
+                <label>Confirm Password</label>
+                <input type="password" id="regConfirmPassword" placeholder="Confirm password">
+            </div>
+            <button class="buy-btn" onclick="registerUser()">Create Account</button>
+            <p style="text-align: center; margin-top: 1rem;">
+                Already have account? <a href="#" onclick="showLogin()" style="color: #ff4444;">Login here</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const ownerAccount = {
+            username: "BlinkOP",
+            password: "naman2805",
+            isOwner: true
+        };
+
+        let users = JSON.parse(localStorage.getItem('ccShopUsers')) || [];
+        let cards = JSON.parse(localStorage.getItem('ccShopCards')) || [];
+        let currentUser = null;
+
+        if (cards.length === 0) {
+            cards = [
+                {
+                    id: 1,
+                    number: "4532********1234",
+                    expiry: "06/25",
+                    cvv: "***",
+                    name: "JOHN DOE",
+                    price: 75,
+                    type: "Platinum"
+                },
+                {
+                    id: 2,
+                    number: "5500********5678",
+                    expiry: "09/24",
+                    cvv: "***",
+                    name: "JANE SMITH",
+                    price: 120,
+                    type: "Business"
+                }
+            ];
+            localStorage.setItem('ccShopCards', JSON.stringify(cards));
+        }
+
+        function displayCards() {
+            const container = document.getElementById('cardContainer');
+            container.innerHTML = '';
+            
+            cards.forEach(card => {
+                const cardElement = `
+                    <div class="card">
+                        <h3>💳 ${card.type} Card</h3>
+                        <p><strong>Number:</strong> ${card.number}</p>
+                        <p><strong>Expiry:</strong> ${card.expiry}</p>
+                        <p><strong>Name:</strong> ${card.name}</p>
+                        <div class="price">$${card.price}</div>
+                        <button class="buy-btn" onclick="buyCard(${card.id})">Purchase Now</button>
+                    </div>
+                `;
+                container.innerHTML += cardElement;
+            });
+        }
+
+        function showLogin() {
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('registerForm').style.display = 'none';
+            document.getElementById('shop').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'none';
+        }
+
+        function showRegister() {
+            document.getElementById('registerForm').style.display = 'block';
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('shop').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'none';
+        }
+
+        function showShop() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('registerForm').style.display = 'none';
+            document.getElementById('shop').style.display = 'block';
+            document.getElementById('adminPanel').style.display = currentUser && currentUser.isOwner ? 'block' : 'none';
+        }
+
+        function loginUser() {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (username === ownerAccount.username && password === ownerAccount.password) {
+                currentUser = ownerAccount;
+                alert('🔓 Owner login successful! Admin panel activated.');
+                showShop();
+                displayCards();
+                return;
+            }
+
+            const user = users.find(u => u.username === username && u.password === password);
+            if (user) {
+                currentUser = user;
+                alert('Login successful!');
+                showShop();
+                displayCards();
+            } else {
+                alert('Invalid credentials!');
+            }
+        }
+
+        function registerUser() {
+            const username = document.getElementById('regUsername').value;
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match!');
+                return;
+            }
+
+            if (users.find(u => u.username === username)) {
+                alert('Username already exists!');
+                return;
+            }
+
+            const newUser = { username, password, isOwner: false };
+            users.push(newUser);
+            localStorage.setItem('ccShopUsers', JSON.stringify(users));
+            
+            alert('Registration successful! Please login.');
+            showLogin();
+        }
+
+        function addNewCard() {
+            if (!currentUser || !currentUser.isOwner) {
+                alert('Access denied! Owner privileges required.');
+                return;
+            }
+
+            const number = document.getElementById('cardNumber').value;
+            const expiry = document.getElementById('cardExpiry').value;
+            const cvv = document.getElementById('cardCVV').value;
+            const name = document.getElementById('cardName').value;
+            const price = document.getElementById('cardPrice').value;
+
+            const newCard = {
+                id: cards.length + 1,
+                number: number,
+                expiry: expiry,
+                cvv: cvv,
+                name: name,
+                price: parseFloat(price),
+                type: "Premium"
+            };
+
+            cards.push(newCard);
+            localStorage.setItem('ccShopCards', JSON.stringify(cards));
+            
+            alert('Card added successfully!');
+            displayCards();
+            
+            document.getElementById('cardNumber').value = '';
+            document.getElementById('cardExpiry').value = '';
+            document.getElementById('cardCVV').value = '';
+            document.getElementById('cardName').value = '';
+            document.getElementById('cardPrice').value = '';
+        }
+
+        function buyCard(cardId) {
+            if (!currentUser) {
+                alert('Please login first!');
+                showLogin();
+                return;
+            }
+
+            const card = cards.find(c => c.id === cardId);
+            if (card) {
+                alert(`🚀 Purchase initiated for: ${card.number}\nAmount: $${card.price}\n\nComplete payment to receive full card details.`);
+            }
+        }
+
+        window.onload = function() {
+            displayCards();
+            showShop();
+        };
+    </script>
+</body>
+</html>
