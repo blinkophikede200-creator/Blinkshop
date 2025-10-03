@@ -1,0 +1,11 @@
+{
+  "name": "blackxcard",
+  "version": "1.0.0",
+  "description": "Premium Card Marketplace",
+  "scripts": {
+    "build": "mkdir -p public && cp *.html public/ && echo 'All HTML files copied to public folder'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
